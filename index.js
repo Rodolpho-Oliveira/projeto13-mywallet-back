@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import bcrypt from "bcrypt"
 import joi from "joi"
 import {MongoClient} from "mongodb"
+import { v4 as uuid} from "uuid"
 dotenv.config()
 
 const mongoClient = new MongoClient(process.env.MONGO_URI)
@@ -29,6 +30,11 @@ const newEntrySchema = joi.object({
     description: joi.string().required()
 })
 
+const newExitSchema = joi.object({
+    value: joi.string().required(),
+    description: joi.string().required()
+})
+
 const app = express()
 app.use(express.json())
 app.use(cors())
@@ -46,7 +52,7 @@ app.post("/sign-up", async (req,res) => {
             name: user.name,
             email: user.email,
             password: encryptedPassword
-        }) 
+        })
         res.sendStatus(201)
     }catch(e){
         res.sendStatus(400)
@@ -61,11 +67,18 @@ app.post("/sign-in", async (req,res) => {
         return
     }
     try{
-        await dataBase.collection("users").findOne({name: login.name}).then(user => {
-            if(bcrypt.compareSync(login.password, user.password)){
-                res.sendStatus(200)
+        const user = await dataBase.collection("users").findOne({name: login.name})
+        if(bcrypt.compareSync(login.password, user.password)){
+            const token = uuid()
+            dataBase.collection("sessions").insertOne({
+                id: user._id,
+                token
+            })
+            res.send(token).status(200)
             }
-        })
+        else{
+            res.sendStatus(400)
+        }
     }
     catch(e){
         res.sendStatus(400)
@@ -76,7 +89,7 @@ app.post("/new-entry", async (req,res) => {
     const entry = req.body
     const validation = newEntrySchema.validate(entry)
     if(validation.error){
-        res.sendStatus(408 )
+        res.sendStatus(422)
         return
     }
     try{
@@ -85,9 +98,48 @@ app.post("/new-entry", async (req,res) => {
             description: entry.description
         })
         res.sendStatus(201)
-    }
-    catch(e){
+    }catch(e){
         res.sendStatus(400)
+    }
+})
+
+app.post("/new-exit", async (req,res) => {
+    const exit = req.body
+    const validation = newExitSchema.validate(exit)
+    if(validation.error){
+        res.sendStatus(422)
+        return
+    }
+    try{
+        await dataBase.collection("exit").insertOne({
+            value: exit.value,
+            description: exit.description
+        })
+        res.sendStatus(200)
+    }catch(e){
+        res.sendStatus(400)
+    }
+})
+
+app.get("/statement", async (req, res) => {
+    const token = req.headers.token
+    if(!token){
+        res.sendStatus(401)
+        return
+    }
+    const session = await dataBase.collection("sessions").findOne({token})
+    if(!session){
+        res.sendStatus(401)
+        return
+    }
+    try{
+        const user = await dataBase.collection("users").findOne({
+            _id: session.id
+        })
+        delete user.password
+        res.send(user) 
+    }catch(e){
+        res.sendStatus(401)
     }
 })
 
