@@ -12,4 +12,4 @@ try{
     console.log(e)
 }
 
-export default dataBase
+export default dataBase;
