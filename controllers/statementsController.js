@@ -21,6 +21,7 @@ export async function newExit(req,res)  {
     const newStatement = res.locals.newStatement
     try{
         await dataBase.collection("statements").insertOne({
+            userId: user.id,
             value: newStatement.value,
             description: newStatement.description,
             idType: 2
