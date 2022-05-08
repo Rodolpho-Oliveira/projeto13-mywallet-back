@@ -20,7 +20,7 @@ export async function resgisterUser(req,res) {
 export async function loginUser(req,res) {
     const login = res.locals.user
     try{
-        const user = await dataBase.collection("users").findOne({name: login.name})
+        const user = await dataBase.collection("users").findOne({email: login.email})
         if(bcrypt.compareSync(login.password, user.password)){
             const token = uuid()
             dataBase.collection("sessions").insertOne({
