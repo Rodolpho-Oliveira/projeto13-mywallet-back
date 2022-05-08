@@ -18,8 +18,10 @@ export async function newEntry(req,res) {
 }
 
 export async function newExit(req,res)  {
+    const token = req.headers.token
     const newStatement = res.locals.newStatement
     try{
+        const user = await dataBase.collection("sessions").findOne({token})
         await dataBase.collection("statements").insertOne({
             userId: user.id,
             value: newStatement.value,
