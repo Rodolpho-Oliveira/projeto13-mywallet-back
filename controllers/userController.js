@@ -13,7 +13,7 @@ export async function resgisterUser(req,res) {
         })
         res.sendStatus(201)
     }catch(e){
-        res.sendStatus(400)
+        res.sendStatus(422)
     }
 }
 

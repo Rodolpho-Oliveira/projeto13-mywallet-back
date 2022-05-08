@@ -20,7 +20,7 @@ export const signUpSchemaMiddleware = (req, res, next) => {
 
 export const signInSchemaMiddleware = (req, res, next) => {
     const signInSchema = Joi.object({
-        name: Joi.string().required(),
+        email: Joi.string().email().required(),
         password: Joi.string().required()
     })
     const user = req.body
