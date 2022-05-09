@@ -6,7 +6,8 @@ export async function resgisterUser(req,res) {
     const user = res.locals.user
     const encryptedPassword = bcrypt.hashSync(user.password, 10)
     const checkUser = await dataBase.collection("users").findOne(user.email)
-    if(!checkUser){
+    if(checkUser){
+        res.sendStatus(422)
         return
     }
     try{
