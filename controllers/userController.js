@@ -27,7 +27,7 @@ export async function loginUser(req,res) {
                 id: user._id,
                 token
             })
-            res.send(token, user.name).status(200)
+            res.send([token, user.name]).status(200)
             }
         else{
             res.sendStatus(400)
