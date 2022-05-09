@@ -1,15 +1,18 @@
+import dayjs from "dayjs"
 import dataBase from "../database.js"
 
 export async function newEntry(req,res) {
     const token = req.headers.token
     const newStatement = res.locals.newStatement
+    const now = dayjs()
     try{
         const user = await dataBase.collection("sessions").findOne({token})
         await dataBase.collection("statements").insertOne({
             userId: user.id,
             value: newStatement.value,
             description: newStatement.description,
-            idType: 1
+            idType: 1,
+            date: `${now.$D}/${now.$M}`
         })
         res.sendStatus(201)
     }catch(e){
@@ -20,13 +23,15 @@ export async function newEntry(req,res) {
 export async function newExit(req,res)  {
     const token = req.headers.token
     const newStatement = res.locals.newStatement
+    const now = dayjs()
     try{
         const user = await dataBase.collection("sessions").findOne({token})
         await dataBase.collection("statements").insertOne({
             userId: user.id,
             value: newStatement.value,
             description: newStatement.description,
-            idType: 2
+            idType: 2,
+            date: `${now.$D}/${now.$M}`
         })
         res.sendStatus(200)
     }catch(e){
