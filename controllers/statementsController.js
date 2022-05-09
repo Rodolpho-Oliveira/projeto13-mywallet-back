@@ -24,6 +24,7 @@ export async function newExit(req,res)  {
     const token = req.headers.token
     const newStatement = res.locals.newStatement
     const now = dayjs()
+    now.$M += 1
     if(now.$D < 10){
         now.$D = "0" + now.$D
     }
@@ -37,7 +38,7 @@ export async function newExit(req,res)  {
             value: newStatement.value,
             description: newStatement.description,
             idType: 2,
-            date: `${now.$D}/${now.$M + 1}`
+            date: `${now.$D}/${now.$M}`
         })
         res.sendStatus(200)
     }catch(e){
