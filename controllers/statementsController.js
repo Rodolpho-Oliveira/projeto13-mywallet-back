@@ -25,10 +25,10 @@ export async function newExit(req,res)  {
     const newStatement = res.locals.newStatement
     const now = dayjs()
     if(now.$D < 10){
-        time.$D = "0" + time.$D
+        now.$D = "0" + now.$D
     }
     if(now.$M < 10){
-        time.$M = "0" + time.$M
+        now.$M = "0" + now.$M
     }
     try{
         const user = await dataBase.collection("sessions").findOne({token})
