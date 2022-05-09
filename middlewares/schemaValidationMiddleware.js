@@ -13,11 +13,6 @@ export const signUpSchemaMiddleware = (req, res, next) => {
         return res.sendStatus(422)
     }
     else{
-        const checkUser = await dataBase.collection("users").findOne(user.email)
-        if(checkUser){
-            res.send(checkUser).status(400)
-            return
-        }
         res.locals.user = user
     }
     next()
