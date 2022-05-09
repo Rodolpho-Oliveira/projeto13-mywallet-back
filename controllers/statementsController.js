@@ -5,6 +5,13 @@ export async function newEntry(req,res) {
     const token = req.headers.token
     const newStatement = res.locals.newStatement
     const now = dayjs()
+    now.$M += 1
+    if(now.$D < 10){
+        now.$D = "0" + now.$D
+    }
+    if(now.$M < 10){
+        now.$M = "0" + now.$M
+    }
     try{
         const user = await dataBase.collection("sessions").findOne({token})
         await dataBase.collection("statements").insertOne({
