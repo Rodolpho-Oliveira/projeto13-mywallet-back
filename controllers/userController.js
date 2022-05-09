@@ -5,6 +5,10 @@ import dataBase from "../database.js"
 export async function resgisterUser(req,res) {
     const user = res.locals.user
     const encryptedPassword = bcrypt.hashSync(user.password, 10)
+    const checkUser = dataBase.collection("users").findOne(user.name)
+    if(!checkUser){
+        return
+    }
     try{
         await dataBase.collection("users").insertOne({
             name: user.name,

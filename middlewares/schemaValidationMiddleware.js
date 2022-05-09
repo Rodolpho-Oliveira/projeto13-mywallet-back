@@ -13,6 +13,7 @@ export const signUpSchemaMiddleware = (req, res, next) => {
         return res.sendStatus(422)
     }
     else{
+        
         res.locals.user = user
     }
     next()
