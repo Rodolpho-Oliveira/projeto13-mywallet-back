@@ -10,6 +10,9 @@ export async function resgisterUser(req,res) {
         res.sendStatus(422)
         return
     }
+    else{
+        res.send("foi")
+    }
     try{
         await dataBase.collection("users").insertOne({
             name: user.name,
