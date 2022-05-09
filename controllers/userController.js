@@ -8,7 +8,7 @@ export async function resgisterUser(req,res) {
     try{
         const checkUser = await dataBase.collection("users").findOne(user.email)
         if(checkUser){
-            res.send(checkUser).status(422)
+            res.send(checkUser).status(400)
             return
         }
         await dataBase.collection("users").insertOne({
