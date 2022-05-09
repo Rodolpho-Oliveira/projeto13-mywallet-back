@@ -24,6 +24,12 @@ export async function newExit(req,res)  {
     const token = req.headers.token
     const newStatement = res.locals.newStatement
     const now = dayjs()
+    if(now.$D < 10){
+        time.$D = "0" + time.$D
+    }
+    if(now.$M < 10){
+        time.$M = "0" + time.$M
+    }
     try{
         const user = await dataBase.collection("sessions").findOne({token})
         await dataBase.collection("statements").insertOne({
