@@ -37,7 +37,7 @@ export async function newExit(req,res)  {
             value: newStatement.value,
             description: newStatement.description,
             idType: 2,
-            date: `${now.$D}/${now.$M}`
+            date: `${now.$D}/${now.$M + 1}`
         })
         res.sendStatus(200)
     }catch(e){
